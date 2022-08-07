@@ -3,7 +3,9 @@ This project is demostrated in developing an ASP NET Core MVC project with JQuer
 Bootswatch templates are used for fast and beautiful styles.
 SSMS is used. Multiple stored procedures are used for respective filters in banking and transaction pages.
 
+#Technologies:
+ASP.NET CORE, Javascript,JQuery, HTML, CSS,Bootstrap, Bootswatch
 #Functionality
-Bank manage
-Making transactions
+Bank manage,
+Making transactions,
 Mornitering transactions
