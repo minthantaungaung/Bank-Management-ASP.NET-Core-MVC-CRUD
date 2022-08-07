@@ -1,4 +1,4 @@
-# ASP.NET Core MVC Demo Project
+# ASP.NET Core MVC 
 <kbd>Date : 8/7/2020</kbd>
 <br> 
 This project is demostrated in developing an ASP .NET Core MVC project with JQuery Data table. And Bootswatch sass styles are used for fast and beautiful styles.
