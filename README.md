@@ -11,3 +11,5 @@ ASP.NET CORE, Javascript,JQuery, HTML, CSS,Bootstrap, Bootswatch
 Bank manage,
 Making transactions,
 Mornitering transactions
+<br>
+<b>Date :</b> - <i>8/7/2020</i>
