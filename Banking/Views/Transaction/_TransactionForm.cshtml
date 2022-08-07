@@ -1,0 +1,378 @@
+﻿@model Banking.Models.Transaction
+    <form asp-action="UpSertForm" id="TransactionUpsertForm" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col card m-2 p-3">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-form-label">East/ West: <span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>
+                                                <input type="radio" asp-for="EastWest" name="EastWest" value="0" class="form-check-input East" required />East
+                                            </label>
+                                        </div>
+                                        <div class="col">
+                                            <label>
+                                                <input type="radio" asp-for="EastWest" name="EastWest" value="1" class="form-check-input West" required />West
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <span id="EastWestEr" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Petredec" class="col-form-label">Petredec Entity:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                @{
+                                    var petredec = new List<SelectListItem>()
+                                                                                                                                                                                                                            {
+                                        new SelectListItem {Value = "" , Text = "-- Select --" },
+                                        new SelectListItem {Value = "PEL" , Text = "PEL" },
+                                        new SelectListItem {Value = "PPL" , Text = "PPL" },
+                                    };
+                                    @Html.DropDownListFor(model => model.PetredecEntity, petredec, new { @class = "form-control", name = "Petredec", required = "required" })
+                                }
+                                <span id="PetredecEntityEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Desk" class="col-form-label">Desk:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                @{
+                                    var desk = new List<SelectListItem>()
+                                                                                                                                                                                                                                            {
+                                        new SelectListItem {Value = "" , Text = "-- Select --" },
+                                        new SelectListItem {Value = "Front" , Text = "Front" },
+                                        new SelectListItem {Value = "Back" , Text = "Back" },
+                                    };
+                                    @Html.DropDownListFor(model => model.Desk, desk, new { @class = "form-control", name = "Desk", required = "required" })
+                                }
+                                <span id="DeskEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" name="Import&Export">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-form-label">Import/Export/ExportLC/Open:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>
+                                                <input type="radio" asp-for="ImportExport" name="ImportExport" value="0" class="form-check-input vImport" required />Import
+                                            </label>
+                                        </div>
+                                        <div class="col">
+                                            <label>
+                                                <input type="radio" asp-for="ImportExport" name="ImportExport" value="1" class="form-check-input vExport" required />Export
+                                            </label>
+                                        </div>
+                                        <div class="col">
+                                            <label>
+                                                <input type="radio" asp-for="ImportExport" name="ImportExport" value="2" class="form-check-input vExportLC" required />ExportLC
+                                            </label>
+                                        </div>
+                                        <div class="col">
+                                            <label>
+                                                <input type="radio" asp-for="ImportExport" name="ImportExport" value="3" class="form-check-input vOpen" required />Open
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <span id="ImportExportEr" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Credit" class="col-form-label">Credit Status:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                @{
+                                    var credit = new List<SelectListItem>()
+                                                                                                                                                                                                                                            {
+                                        new SelectListItem {Value = "" , Text = "-- Select --" },
+                                        new SelectListItem {Value = "1" , Text = "Lorem 1" },
+                                        new SelectListItem {Value = "2" , Text = "Lorem 2" },
+                                        new SelectListItem {Value = "3" , Text = "Lorem 3" }
+                                    };
+                                    @Html.DropDownListFor(model => model.CreditStatus, credit, new { @class = "form-control", name = "CreditStatus", required = "required" })
+                                }<span id="CreditEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="CounterParty" class="col-form-label">Counter party:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                <input asp-for="CounterParty" required name="CounterParty" class="form-control" />
+                                <span id="CounterPartyEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Incoterm" class="col-form-label">Incoterm:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                @{
+                                    var incoterm = new List<SelectListItem>()
+                                                                                                                                                                                                                                            {
+                                        new SelectListItem {Value = "" , Text = "-- Select --" },
+                                        new SelectListItem {Value = "1" , Text = "Lorem 1" },
+                                        new SelectListItem {Value = "2" , Text = "Lorem 2" },
+                                        new SelectListItem {Value = "3" , Text = "Lorem 3" }
+                                    };
+                                    @Html.DropDownListFor(model => model.Incoterm, incoterm, new { @class = "form-control", name = "Incoterm", required = "required" })
+                                }
+                                <span id="IncotermEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="LoadPort" class="col-form-label">Load Port:</label>
+                            </div>
+                            <div class="col">
+                                <input name="LoadPort" asp-for="LoadPort" required class="form-control" />
+                                <span id="LoadPortEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="PaymentTerms" class="col-form-label">Payment Term:</label>
+                            </div>
+                            <div class="col">
+                                <input name="PaymentTerms" asp-for="PaymentTerms" required class="form-control" />
+                                <span id="PaymentTermsEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-form-label">Import/Export issuing Bank:<span class="text-danger"> *</span></label>
+                            </div>
+                            <div class="col">
+                                <span id="bankLabel"></span>
+                                <input name="ExportBank" asp-for="ExportBank" hidden id="ExportBank" />
+                                @Html.DropDownList("ExportBank", (IEnumerable<SelectListItem>)ViewBag.bank, new { @class = "form-control", id = "bank", required = "required" })
+                                @*@Html.DropDownListFor(model => model.ExportBank, (IEnumerable<SelectListItem>)ViewBag.bank as SelectList, new { @class = "form-control", required = "required" })*@
+                                <span id="bankEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="formfield" class="col-form-label">Export LC Issuing Bank:</label>
+                            </div>
+                            <div class="col">
+                                <input name="formfield" disabled class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Comments" class="col-form-label">Comment:</label>
+                            </div>
+                            <div class="col">
+                                <input name="Comments" asp-for="Comments" required class="form-control" />
+                                <span id="CommentsEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Left side end-->
+                <!--Right side started-->
+                <div class="col card m-2 p-3">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="LcRef" class="col-form-label">LC Number:</label>
+                            </div>
+                            <div class="col">
+                                <input name="LcRef" asp-for="LcRef" required class="form-control" />
+                                <span id="LcRefEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="AdvisingConfirmingBank" class="col-form-label">Advising/Confirming bank:</label>
+                            </div>
+                            <div class="col">
+                                <input name="AdvisingConfirmingBank" required asp-for="AdvisingConfirmingBank" class="form-control" />
+                                <span id="AdvisingConfirmingBankEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="IssuanceDate" class="col-form-label">Issurance Date:<span class="text-danger"> *</span>&nbsp;<i class="fas fa-info-circle text-info"></i></label>
+                            </div>
+                            <div class="col">
+                                <input name="IssuanceDate" type="date" required asp-for="IssuanceDate" class="form-control" />
+                                <span id="IssuanceDateEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="ExpiryDate" class="col-form-label">Expiry Date: &nbsp;<i class="fas fa-info-circle text-info"></i></label>
+                            </div>
+                            <div class="col">
+                                <input name="ExpiryDate" type="date" required asp-for="ExpiryDate" class="form-control" />
+                                <span id="ExpiryDateEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="LcAmount" class="col-form-label">Lc Amount:</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" name="LcAmount" required asp-for="LcAmount" class="form-control" />
+                                <span id="LcAmountEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Tolerance" class="col-form-label">Tolernce %:</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" name="Tolerance" required asp-for="Tolerance" class="form-control" />
+                                <span id="ToleranceEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="Tolerncev" class="col-form-label">Tolerance Value:</label>
+                            </div>
+                            <div class="col">
+                                <input name="Tolerncev" id="Tolerncev" value="@ViewBag.ToleranceValue" disabled class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="" class="col-form-label">LC Oustanding:</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" disabled class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="LcLineUtilisation" class="col-form-label">Line Utilisation: &nbsp;<i class="fas fa-info-circle text-info"></i></label>
+                            </div>
+                            <div class="col">
+                                <input type="number" required name="LcLineUtilisation" asp-for="LcLineUtilisation" class="form-control" />
+                                <span id="LcLineUtilisationEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="LcRate" class="col-form-label">LC Rate:</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" required name="LcRate" asp-for="LcRate" class="form-control" />
+                                <span id="LcRateEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="LCfees" class="col-form-label">LC Fees:</label>
+                            </div>
+                            <div class="col">
+                                <input type="number" required name="LCfees" asp-for="LcFees" class="form-control" />
+                                <span id="LCfeesEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="FullyCancelled" class="col-form-label">Fully Cancelled:</label>
+                            </div>
+                            <div class="col">
+                                @{
+                                    var FCancle = new List<SelectListItem>()
+                                                                                                                                                                                                                                            {
+                                        new SelectListItem {Value = "" , Text = "-- Select --" },
+                                        new SelectListItem {Value = "1" , Text = "Lorem 1" },
+                                        new SelectListItem {Value = "2" , Text = "Lorem 2" },
+                                        new SelectListItem {Value = "3" , Text = "Lorem 3" }
+                                    };
+                                    @Html.DropDownListFor(model => model.FullyCancelled, FCancle, new { @class = "form-control", required = "required", name = "FullyCancelled" })
+                                }
+                                <span id="FullyCancelledEr" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input asp-for="Id" hidden />
+            <input asp-for="VesselStrategy" hidden />
+            <input asp-for="BlDate" hidden />
+            <input asp-for="SoldTo" hidden />
+            <input asp-for="DischargePort" hidden />
+            <input asp-for="BankId" hidden />
+            <input asp-for="InvoiceValue" hidden />
+            <input asp-for="PaymentDate" hidden />
+            <input asp-for="LoanAmount" hidden />
+            <input asp-for="LoanEnd" hidden />
+            <input asp-for="Sequence" hidden />
+            <input asp-for="CreatedBy" hidden />
+            <input asp-for="CreatedDate" hidden />
+            <input asp-for="UpdatedBy" hidden />
+            <input asp-for="UpdatedDate" hidden />
+            <input asp-for="LoanFees" hidden />
+            <input asp-for="Expired" hidden />
+            <input asp-for="LockedBy" hidden />
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn  btn-lg btn-light" data-dismiss="modal">Close</button>
+            <button type="submit" onclick="Validate()" class="btn btn-lg btn-dark">Submit</button>
+        </div>
+    </form>
+

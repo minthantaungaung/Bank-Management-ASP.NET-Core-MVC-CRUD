@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewData["Title"] = "Transactions";
+}
+@section css{
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css" rel="stylesheet" />
+}
+<body>
+    <div class="container">
+        <div class="TransactionList">
+            <div class="mx-auto" style="width: 200px;">
+                <div class="lds-dual-ring"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bd-example-modal-xl fade" id="TransactionForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="ModalLabel">Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="MainForm">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+@section Scripts {
+    <link href="~/lib/datatable/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <script src="~/lib/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatable/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.js"></script>
+    <script>
+        var WestEast = null;
+        var lfive = null;
+        var status = '@ViewBag.status';
+        $(function () {
+            document.addEventListener("mousewheel", function (event) {
+                if (document.activeElement.type === "number") {
+                    document.activeElement.blur();
+                }
+            });
+            if (status == "ADD") {
+                addTransaction();
+            }
+            TransactionList();
+        });
+        function LastTransaction() {
+            lfive = "yes";
+            TransactionList();
+        }
+        function TransactionList() {
+            $.ajax({
+            cache: false,
+            url: '@Url.Action("_TransactionList", "Transaction")',
+            data:{last5 : lfive},
+            beforeSend: function () {
+            },
+            success: function (data) {
+                $('.TransactionList').empty().append(data);
+                $('#Datatable').DataTable();
+            }
+        })
+        }
+        function addTransaction() {
+            $('#ModalLabel').empty().append("Add New Transaction");
+            BindForm("ADD",0);
+        }
+        function editTransaction(e) {
+            $('#ModalLabel').empty().append("Edit Transaction");
+            var id = $(e).attr('data-id');
+            BindForm("Edit", id);
+        }
+        function BindForm(type, id) {
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("_TransactionForm", "Transaction")',
+                data: { FormType: type, ID: id },
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $('#MainForm').empty().append(data);
+                    if (type == "Edit") {
+                        var x = $('#ExportBank').val();
+                        $('#bankLabel').empty().append('<label class="font-italic text-muted hidden">Recent selected Bank: (' + x + ')</label>');
+                        $('#bankLabel').removeClass('hidden');
+                    } else {
+                        $('#bankLabel').empty().addClass('hidden');
+                    }
+                    $('#TransactionForm').modal("show");
+
+                    $('#bank').on("change", function () {
+                        var a = $('#bank').val();
+                        $('#ExportBank').val(a);
+                    });
+
+                    $('#LcAmount').on("change", function () {
+                        var lc = $(this).val();
+                        var tolerance = $('#Tolerance').val();
+                        var x = lc * tolerance / 100;
+                        $('#Tolerncev').val(x);
+                    });
+
+                    $('#Tolerance').on("change", function () {
+                        var tolerance = $(this).val();
+                        var lc = $('#LcAmount').val();
+                        var x = lc * tolerance / 100;
+                        $('#Tolerncev').val(x);
+                    })
+                    },
+                complete: function () {
+                    $('#TransactionUpsertForm').submit(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            cache: false,
+                            url: '@Url.Action("UpSertForm", "Transaction")',
+                            type: "Post",
+                            data: $(this).serialize(),
+                            beforeSend: function () {
+                                $('#subBtn').empty().append('Loading...');
+                                $('#subBtn').prop('disabled', true);
+                            },
+                            success: function (mydata) {
+                                (mydata == "added") ?
+                                    Swal.fire(
+                                        'Success!',
+                                        'A new transaction has been added!',
+                                        'success'
+                                    )
+                               :
+                                    Swal.fire(
+                                        'Success!',
+                                        'The transaction has been updated!',
+                                        'success'
+                                    );
+
+                                $('#subBtn').empty().append('Submit');
+                                $('#subBtn').prop('disabled', false);
+                                $('#TransactionForm').modal("hide");
+                                TransactionList();
+                            }
+                        });
+                    });
+                }
+            })
+        }
+        function Validate() {
+            ($('.East').prop('checked') || $('.West').prop('checked')) ? $('#EastWestEr').empty() : $('#EastWestEr').empty().append("Please choose an option!");
+
+            ($('.vImport').prop('checked') || $('.vExport').prop('checked') || $('.vExportLC').prop('checked') || $('.vOpen').prop('checked'))
+                ? $('#ImportExportEr').empty() : $('#ImportExportEr').empty().append("Please choose an option!");
+
+            var p = $('#PetredecEntity').val();
+            (p == "" || p == null) ? $('#PetredecEntityEr').empty().append("Please select one!") : $('#PetredecEntityEr').empty();
+
+            var d = $('#Desk').val();
+            (d == "" || d == null) ? $('#DeskEr').empty().append("Please select one!") : $('#DeskEr').empty();
+
+            var c = $('#CreditStatus').val();
+            (c == "" || c == null) ? $('#CreditEr').empty().append("Please select one!") : $('#CreditEr').empty();
+
+            var cp = $('#CounterParty').val();
+            (cp == "" || cp == null) ? $('#CounterPartyEr').empty().append("CounterParty cannot be empty!") : $('#CounterPartyEr').empty();
+
+            var it = $('#Incoterm').val();
+            (it == "" || it == null) ? $('#IncotermEr').empty().append(" Incoterm cannot be empty!") : $('#IncotermEr').empty();
+
+            var lp = $('#LoadPort').val();
+            (lp == "" || lp == null) ? $('#LoadPortEr').empty().append("LoadPort cannot be empty!!") : $('#LoadPortEr').empty();
+
+            var pt = $('#PaymentTerms').val();
+            (pt == "" || pt == null) ? $('#PaymentTermsEr').empty().append("PaymentTerms cannot be empty!!") : $('#PaymentTermsEr').empty();
+
+            var Eb = $('#ExportBank').val();
+            (Eb == "" || Eb == null) ? $('#bankEr').empty().append("Please select one Bank!") : $('#bankEr').empty();
+
+            var cm = $('#Comments').val();
+            (cm == "" || cm == null) ? $('#CommentsEr').empty().append("Comments cannot be empty!") : $('#CommentsEr').empty();
+
+            //right side
+            var tr = $('#Tolerance').val();
+            if (tr == 0 || tr == null) {
+                $('#ToleranceEr').empty().append("This cannot be 0 or Empty!")
+            } else if (tr <= 0 || tr > 99) {
+                $('#ToleranceEr').empty().append("Only accepts numbers between 0 to 99 including 99!")
+            }
+            else{
+                $('#ToleranceEr').empty();
+            }
+
+            var lcrf = $('#LcRef').val();
+            (lcrf == "" || lcrf == null) ? $('#LcRefEr').empty().append("LcRef cannot be empty!") : $('#LcRefEr').empty();
+
+            var AB = $('#AdvisingConfirmingBank').val();
+            (AB == "" || AB == null) ? $('#AdvisingConfirmingBankEr').empty().append("AdvisingConfirmingBank cannot be empty!") : $('#AdvisingConfirmingBankEr').empty();
+
+            var id = $('#IssuanceDate').val();
+            (id == "" || id == null) ? $('#IssuanceDateEr').empty().append("IssuanceDate cannot be empty!") : $('#IssuanceDateEr').empty();
+
+            var ed = $('#ExpiryDate').val();
+            (ed == "" || ed == null) ? $('#ExpiryDateEr').empty().append("ExpiryDate cannot be empty!") : $('#ExpiryDateEr').empty();
+
+            var lc = $('#LcAmount').val();
+            (lc == 0 || lc == null) ? $('#LcAmountEr').empty().append("LcAmount cannot be empty!") : $('#LcAmountEr').empty();
+
+            var lcu = $('#LcLineUtilisation').val();
+            (lcu == 0 || lcu == null) ? $('#LcLineUtilisationEr').empty().append("LcLineUtilisation cannot be empty!") : $('#LcLineUtilisationEr').empty();
+
+            var lcr = $('#LcRate').val();
+            (lcr == 0 || lcr == null) ? $('#LcRateEr').empty().append("LcRate cannot be empty!") : $('#LcRateEr').empty();
+
+            var lcf = $('#LCfees').val();
+            (lcf == 0 || lcf == null) ? $('#LCfeesEr').empty().append("LCfees cannot be empty!") : $('#LCfeesEr').empty();
+
+            var fc = $('#FullyCancelled').val();
+            (fc == "" || fc == null) ? $('#FullyCancelledEr').empty().append("Please select one!") : $('#FullyCancelledEr').empty();
+
+        }
+
+        //function timerAlert(){
+        //    let timerInterval
+        //    Swal.fire({
+        //        title: 'Validation alert!',
+        //        html: 'Seem like you did not filled some <br> <b>required fields</b>!',
+        //        timer: 1000,
+        //        timerProgressBar: true,
+        //        didOpen: () => {
+        //            Swal.showLoading()
+        //            timerInterval = setInterval(() => {
+        //                const content = Swal.getContent()
+        //                if (content) {
+        //                    const b = content.querySelector('b')
+        //                    if (b) {
+        //                        b.textContent = Swal.getTimerLeft()
+        //                    }
+        //                }
+        //            }, 100)
+        //        },
+        //        willClose: () => {
+        //            clearInterval(timerInterval)
+        //        }
+        //    }).then((result) => {
+        //        if (result.dismiss === Swal.DismissReason.timer) {
+        //            console.log('I was closed by the timer')
+        //        }
+        //    })
+        //}
+        @*function bindBank() {
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("getBank", "Transaction")',
+                data: { },
+                success: function (result) {
+                    if (result != null) {
+                        $('#Bank').empty();
+                        $('#Bank').append($('<option value="">-- Select --</option>'));
+                        for (i = 0; i < result.length; i++) {
+                            $('#Bank').append($('<option value="' + result[i] + '">' + result[i] + '</option>>'));
+                        }
+                    }
+                },
+                complete: function () {
+
+                }
+            });
+        }*@
+    </script>
+}
+

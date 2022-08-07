@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Banking.Models.Transaction>
+
+
+<div>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-secondary" onclick="addTransaction()">Add New Transaction</button>
+        </div>
+        <div class="col">
+            <div class="btn-group float-right" role="group">
+                <button type="button" class="btn btn-light" onclick="location.reload()"><i class="fas fa-redo" style="cursor: pointer;"></i></button>
+                <button type="button" class="btn btn-secondary" onclick="LastTransaction()"><i class="fas fa-info-circle"></i> &nbsp; Show The Last 5 Transaction</button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table id="Datatable" class="table table-striped" style="overflow-x:auto;">
+        <thead class="bg-dark text-white font-weight-bold">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CounterParty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EastWest)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ImportExport)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExportBank)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LcAmount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tolerance)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="table-default">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.CounterParty
+                    </td>
+                    <td>
+                        @{ 
+                            var a = item.EastWest;
+                            switch (a)
+                            {
+                                case "0":
+                                    <b>East</b>
+                                    break;
+                                case "1":
+                                    <b>West</b>
+                                    break;
+                                default:
+                                    <b>None</b>
+                                    break;
+                            }
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var b = item.ImportExport;
+                            switch (a)
+                            {
+                                case "0":
+                                    <b>Import</b>
+                                    break;
+                                case "1":
+                                    <b>Export</b>
+                                    break;
+                                case "2":
+                                    <b>Export LC</b>
+                                    break;
+                                case "3":
+                                    <b>Open</b>
+                                    break;
+                                default:
+                                    <b>None</b>
+                                    break;
+                            }
+                        }
+                    </td>
+                    <td>
+                        @item.ExportBank
+                    </td>
+                    <td>
+                        @item.LcAmount
+                    </td>
+                    <td>
+                        @item.Tolerance %
+                    </td>
+                    <td >
+                        <div class="input-group">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Actions</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" data-id="@item.Id" onclick="editTransaction(this)">Edit</a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a class="dropdown-item" data-id="@item.Id" onclick="detailTransaction(this)">Detail</a>
+                                </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Banking.Models.Bank>
+
+<div class="@*table-responsive*@">
+    <br>
+    <table id="Datatable" class="table table-striped" style="width:100%;">
+        <thead class="bg-dark text-white font-weight-bold">
+            <tr>
+                <th>
+                    DisplayBankName
+                </th>
+                <th>
+                    WestEast
+                </th>
+                <th>
+                    ExpiryDate
+                </th>
+                <th>
+                    Borrowers
+                </th>
+                <th>
+                    Sequence
+                </th>
+                <th>
+                    Update Date
+                </th>
+               
+            </tr>
+        </thead>
+        <tbody class="table-default">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.DisplayBankName</td>
+                    @*<td>@item.BankLimit</td>*@
+                    <td>
+                        @{ 
+                            var a = item.WestEast;
+                            if (a == "0")
+                            {
+                              <b>East</b>
+                            }
+                            else
+                            {
+                                <b>West</b>
+                            }
+                        }
+                        
+                    </td>
+                    <td>@item.Expiry</td>
+                    <td>@item.Borrowers</td>
+                    <td>@item.Sequence</td>
+                    <td>@item.UpdatedDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

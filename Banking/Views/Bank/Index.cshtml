@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<body>
+    <div class="container">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary" onclick="EastWest('0')">East</button>
+            <button type="button" class="btn btn-secondary" onclick="EastWest('1')">West</button>
+        </div>
+        <div class="bankList">
+            <div class="mx-auto" style="width: 200px;">
+                <div class="lds-dual-ring"></div>
+            </div>
+        </div>
+    </div>
+</body>
+@section Scripts {
+
+    <link href="~/lib/datatable/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <script src="~/lib/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatable/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        var WestEast = null;
+        function EastWest(e) {
+            if (e == '0') {
+                WestEast = '0';
+                bankList();
+            } else {
+                WestEast = '1';
+                bankList();
+            }
+        }
+        $(function () {
+            bankList();
+        });
+        function bankList() {
+            $.ajax({
+            cache: false,
+            url: '@Url.Action("_BankList","Bank")',
+            data: {WestEast:WestEast},
+            beforeSend: function () {
+            },
+            success: function (data) {
+                $('.bankList').empty().append(data);
+                $('#Datatable').DataTable();
+            }
+        })
+        }
+    </script>
+}
